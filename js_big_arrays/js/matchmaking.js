@@ -13,10 +13,12 @@ const PISCES = "Pisces";
 
 // We assume every one has a unique credit card number here.
 const getPersonWithId = (people, credit_card_number) =>
-  people.filter(person => person.credit_card.number === credit_card_number)[0];
+  people.filter(
+    (person) => person.credit_card.number === credit_card_number
+  )[0];
 
-const getMatchingSigns = sign =>
-  ({
+const getMatchingSigns = (sign) => {
+  const signsMap = {
     [ARIES]: [ARIES, LEO, SAGGITARIUS, GEMINI, LIBRA, AQUARIUS],
     [LEO]: [ARIES, LEO, SAGGITARIUS, GEMINI, LIBRA],
     [SAGGITARIUS]: [ARIES, LEO, SAGGITARIUS, GEMINI, LIBRA, AQUARIUS],
@@ -29,17 +31,20 @@ const getMatchingSigns = sign =>
     [CANCER]: [TAURUS, VIRGO, CAPRICORN, CANCER, SCORPIO, PISCES],
     [SCORPIO]: [TAURUS, VIRGO, CAPRICORN, CANCER, SCORPIO, PISCES],
     [PISCES]: [TAURUS, CAPRICORN, CANCER, SCORPIO, PISCES],
-  }[sign]);
+  };
+
+  return signsMap[sign];
+};
 
 const getMatchesForSign = (people, sign) => {
   const matchingSigns = getMatchingSigns(sign);
-  const matches = people.filter(potentialMatch =>
+  const matches = people.filter((potentialMatch) =>
     matchingSigns.includes(potentialMatch.sign)
   );
   return matches;
 };
 
-const getMatchesForPerson = event => {
+const getMatchesForPerson = (event) => {
   const credit_card_number = event.target.dataset.id;
 
   // Using global variable here, not that nice.
@@ -51,7 +56,7 @@ const getMatchesForPerson = event => {
   let matches = getMatchesForSign(people, person.sign);
   // Don't match with yourself.
   matches = matches.filter(
-    person => person.credit_card.number !== credit_card_number
+    (person) => person.credit_card.number !== credit_card_number
   );
 
   // Display every one with self at the top.
@@ -110,16 +115,16 @@ const getPersonCardHTML = ({
   return card;
 };
 
-const displayPeople = people => {
+const displayPeople = (people) => {
   emptyResultList();
   emptyButtonList();
   people.map(getPersonCardHTML).forEach(addToButtonList);
 };
 
-const getPeople = personData => {
+const getPeople = (personData) => {
   personData = personData
-    .filter(person => person.age > 17)
-    .map(person => {
+    .filter((person) => person.age > 17)
+    .map((person) => {
       person.self = false; // TODO: Could make this nicer.
       return person;
     })
